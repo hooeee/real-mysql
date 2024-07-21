@@ -75,9 +75,54 @@ call generate_orders2();
 
 ```sql
 
+create database drive_table_study;
+use drive_table_study;
+
+CREATE TABLE orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT NOT NULL,
+    order_date DATETIME NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    total_amount DECIMAL(10, 2) NOT NULL,
+    -- INDEX (customer_id),
+    INDEX (order_date),
+    INDEX (status)
+);
+
+CREATE TABLE customers (
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    INDEX (email)
+);
+
+insert into customers values ('1', 'Alice', 'alice@example.com');
+insert into customers values ('2', 'Bob', 'bob@example.com');
+insert into customers values ('3', 'Charlie', 'charlie@example.com');
+insert into customers values ('4', 'David', 'david@example.com');
+
+
+
+CREATE PROCEDURE generate_orders()
+BEGIN
+    DECLARE i INT DEFAULT 1;
+    WHILE i <= 10000 DO
+        INSERT INTO orders (customer_id, order_date, status, total_amount)
+        VALUES (FLOOR(RAND() * 4) + 1, NOW() - INTERVAL FLOOR(RAND() * 365) DAY, 'Completed', FLOOR(RAND() * 1000) + 1);
+        SET i = i + 1;
+    END WHILE;
+END $$;
+
+
+select count(*) from orders; --- 10만 +
+
+start transaction
+call generate_orders();
+rollback;
+
+
 ALTER TABLE orders ENGINE=MyISAM;
 ALTER TABLE customers ENGINE=MyISAM;
-
 
 
 explain select STRAIGHT_JOIN
