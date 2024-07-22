@@ -1,14 +1,13 @@
 version: "3"
 services:
-  db:
-    image: mysql:8.0
-    container_name: real-mysql
-    restart: always
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      TZ: Asia/Seoul
-    volumes:
-      - ./mount/data:/var/lib/mysql
-      - ./mount/init:/docker-entrypoint-initdb.d
+    real-mysql:
+        image: mysql:8.0
+        restart: always
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            TZ: Asia/Seoul
+        volumes:
+            - ./mount_1/data:/var/lib/mysql
+            - ./mount_1/init:/docker-entrypoint-initdb.d
